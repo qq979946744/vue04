@@ -7,7 +7,7 @@
              <el-menu-item >创建工具夹类别</el-menu-item>
              <el-menu-item >修改工具架类别</el-menu-item>
              <el-menu-item >采购入库申请处理</el-menu-item>
-             <el-menu-item >报废申请处理</el-menu-item>
+             <el-menu-item @click="jionBrokenI">报废申请处理</el-menu-item>
             
         </el-menu>
       </el-aside>
@@ -28,7 +28,9 @@
         </el-header>
 
         <el-main>
-         
+            <transition name="slide-fade">
+                <router-view></router-view>
+            </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -45,9 +47,27 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄"
     };
     return {
-      tableData: Array(20).fill(item)
+      tableData: Array(20).fill(item),
+      uid:"1",
+      workcell:"1",
+      role:"",
+      index:1
     };
+  },
+  methods:{
+      jionBrokenI:function(){
+          this.$router.push({
+            name:'TwoBroken',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      }
+  },
+  created(){
+    //   this.uid=this.$route.query.uid
+    //   this.workcell=this.$route.query.workcell
+    //   this.role=this.$route.query.uid
   }
+
 };
 </script>
 

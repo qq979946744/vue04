@@ -5,7 +5,7 @@
         <el-menu router>
           <el-menu-item index="/"> 出库申请</el-menu-item>
           <el-menu-item>报库申请</el-menu-item>
-          <el-menu-item index="/JuniorStaff/JoinRepair">
+          <el-menu-item @click="repair">
             报修申请
           </el-menu-item>
         </el-menu>
@@ -47,18 +47,26 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄"
     };
     return {
-      tableData: Array(20).fill(item),
-      uid:"",
-      workcell:"",
-      role:""
+      tableData: Array(10).fill(item),
+      uid:"1",
+      workcell:"1",
+      role:"",
+      index:1
 
     };
   },
+  methods:{
+      repair:function(){
+          this.$router.push({
+            name:'JoinRepair',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      }
+  },
   created(){
-    //   this.uid=this.$route.query.uid
-    //   this.workcell=this.$route.query.uid
-    //   this.role=this.$route.query.uid
-    //   console.log(workcell)
+      this.uid=this.$route.query.uid
+      this.workcell=this.$route.query.uid
+      this.role=this.$route.query.uid
   }
 };
 </script>

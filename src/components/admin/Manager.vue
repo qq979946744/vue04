@@ -5,7 +5,7 @@
         <el-menu >
           
              <el-menu-item >入库申请处理</el-menu-item>
-             <el-menu-item >报废申请处理</el-menu-item>
+             <el-menu-item @click="jionBrokenII" >报废申请处理</el-menu-item>
            
             
         </el-menu>
@@ -27,7 +27,9 @@
         </el-header>
 
         <el-main>
-         
+         <transition name="slide-fade">
+                <router-view></router-view>
+        </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -44,9 +46,27 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄"
     };
     return {
-      tableData: Array(20).fill(item)
+      tableData: Array(20).fill(item),
+      uid:"1",
+      workcell:"1",
+      role:"",
+      index:1
     };
+  },
+  methods:{
+      jionBrokenII:function(){
+          this.$router.push({
+            name:'ThreeBroken',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      }
+  },
+  created(){
+    //   this.uid=this.$route.query.uid
+    //   this.workcell=this.$route.query.workcell
+    //   this.role=this.$route.query.uid
   }
+
 };
 </script>
 

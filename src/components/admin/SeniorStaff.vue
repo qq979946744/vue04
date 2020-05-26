@@ -1,13 +1,14 @@
 <template>
-  <div class="JuniorStaff">
+  <div class="SeniorStaff">
     <el-container id="container" style=" border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu router>
           
              <el-menu-item >采购入库申请</el-menu-item>
              <el-menu-item >修改工具架基础信息</el-menu-item>
-             <el-menu-item index="/JuniorStaff/queryRecordRP">报修申请处理</el-menu-item>
-             <el-menu-item index="/JuniorStaff/JoinBroken">报废申请</el-menu-item>
+             <el-menu-item @click="selectRepair">报修申请处理</el-menu-item>
+             <el-menu-item @click="selectBroken">报废申请</el-menu-item>
+             
            
             
         </el-menu>
@@ -38,7 +39,7 @@
 
 <script>
 export default {
-  name: "JuniorStaff",
+  name: "SeniorStaff",
   data() {
     const item = {
       date: "2016-05-02",
@@ -46,8 +47,26 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄"
     };
     return {
-      tableData: Array(20).fill(item)
+      tableData: Array(20).fill(item),
+      uid:"1",
+      workcell:"1",
+      role:"2",
+      index:1
     };
+  },
+  methods:{
+      selectRepair:function(){
+          this.$router.push({
+            name:'queryRecordRP',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
+      selectBroken:function(){
+          this.$router.push({
+            name:'JoinBroken',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      }
   }
 };
 </script>

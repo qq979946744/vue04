@@ -14,6 +14,8 @@ import JuniorStaff from '../components/admin/JuniorStaff'
 import JoinRepair from '../components/SeniorStaffCom/JoinRepair'
 import JoinBroken from '../components/JuniorStaffCom/JoinBroken'
 import queryRecordRP from '../components/JuniorStaffCom/queryRecordRP'
+import TwoBroken from '../components/SuperVisor/TwoBroken'
+// import ThreeBroken from '../components/Manager/ThreeBroken'
 
 Vue.use(Router)
 
@@ -45,11 +47,23 @@ export default new Router({
             path: '/Manager',
             name: 'Manager',
             component: Manager
+                // children: [{
+                //     path: '/Manager/ThreeBroken',
+                //     name: 'ThreeBroken',
+                //     component: ThreeBroken
+                // }]
+
+
         },
         {
             path: '/SuperVisor',
             name: 'SuperVisor',
-            component: SuperVisor
+            component: SuperVisor,
+            children: [{
+                path: '/SuperVisor/TwoBroken',
+                name: 'TwoBroken',
+                component: TwoBroken
+            }]
         },
         {
             path: '/SystemAdministrator',

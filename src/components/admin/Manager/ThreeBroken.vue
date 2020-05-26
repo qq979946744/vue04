@@ -14,52 +14,47 @@
         <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
             <p>夹具模组: {{ scope.row.Model}}</p>
-            <p>状态: {{ scope.row.repairState}}</p>
             <div slot="reference" class="name-wrapper">
                 <el-tag size="medium">{{ scope.row.CodeSeqId }}</el-tag>
             </div>
             </el-popover>
         </template>
         </el-table-column>
-        <el-table-column label="报修问题"  min-width="25%">
+        <el-table-column label="报废问题"  min-width="25%">
             <template slot-scope="scope">
                 <span>{{ scope.row.Problem }}</span>
             </template>
         </el-table-column>
         
-        <el-table-column label="维修发起人"  min-width="10%">
+        <el-table-column label="报废发起人"  min-width="10%">
             <template slot-scope="scope">
-                <span>{{ scope.row.RepMan }}</span>
+                <span>{{ scope.row.ReqMan }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="维修发起时间"  min-width="10%">
+        <el-table-column label="报废发起时间"  min-width="10%">
             <template slot-scope="scope">
                 <span>{{ scope.row.ReqDate }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="维修状态"  min-width="10%">
-        <template slot-scope="scope">
-            <span >{{scope.row.repairState}}</span>
-        </template>
+        <el-table-column label="报废申请状态"  min-width="10%">
+            <template slot-scope="scope">
+                <span>{{ scope.row.BrokenState}}</span>
+            </template>
         </el-table-column>
-        <el-table-column label="维修处理时间"  min-width="10%">
+        <el-table-column label="报废意见"  min-width="20%">
         <template slot-scope="scope">
-            <span >{{scope.row.RepDate}}</span>
+            <el-input type="textarea" v-model="scope.row.Response"></el-input>
         </template>
         </el-table-column>
         
         <el-table-column label="操作"  min-width="10%" >
         <template slot-scope="scope">
             
-            <p><el-button
-            size="mini"
-            type="danger"
-            @click="changeRepair(scope.row,scope.row.id)" v-if="scope.row.repairState=='申请中'">同意维修</el-button></p>
             <p>
                 <el-button
                 size="mini"
                 type="danger"
-                @click="changeRepairToBrokens(scope.row,scope.row.id)" v-if="scope.row.repairState=='申请中'">直接报废</el-button>
+                @click="joinToBrokens(scope.row,scope.row.id,scope.row.Response)" >报废申请</el-button>
             </p>
         </template>
         </el-table-column>
@@ -87,8 +82,8 @@ export default {
       }
     },
     methods:{
-         changeRepair(obj,id){
-             var sure=confirm("确定维修吗")
+         joinToBrokens(obj,id,response){
+             var sure=confirm("确定报废吗")
              console.log(obj)
              console.log(this.tableData.indexOf(obj))
              console.log(id)
@@ -96,48 +91,29 @@ export default {
                  Axios({
                     method:'get',
                     baseURL:'http://api.zjk-conson.com',
-                    url:'/Update/ChangeRepairs?'+"IDs="+id+"&"+"RecordMan="+this.Man
+                    url:'/Update/ChangeBrokensAgreeI?'+"IDs="+id+"&"+"RecordMan="+this.Man+"&Response="+response
              }).then(res=>{
                     if(res.data.success==1){
                         this.tableData.splice(this.tableData.indexOf(obj),1)
-                        alert("成功同意维修")
+                        alert("成功同意报废")
                     }
                 })  
              }
          },
-         changeRepairToBrokens(obj,id){
-             var sure=confirm("确定申请报废吗")
-             console.log(obj)
-             console.log(this.tableData.indexOf(obj))
-             if(sure==true){
-                 Axios({
-                    method:'get',
-                    baseURL:'http://api.zjk-conson.com',
-                    url:'/Update/ChangeRepairsToBrokens?'+"IDs="+id+"&"+"RecordMan="+this.Man
-             }).then(res=>{
-                    if(res.data.success==1){
-                        this.tableData.splice(this.tableData.indexOf(obj),1)
-                        alert("已成功申请报废")
-                    }
-                })  
-             }
-         }
+         
 
     },
     created(){
-        this.uid=this.$route.query.uid
-        this.workcell=this.$route.query.uid
+        // this.uid=this.$route.query.uid
+        // this.workcell=this.$route.query.workcell
          Axios({
                 method:'get',
                 baseURL:'http://api.zjk-conson.com',
-                url:'/query/queryRecordRP?'+"Workcell="+this.workcell+"&state=1&pageIndex=1"
+                url:'/query/queryRecordBK?'+"Workcell="+this.workcell+"&state=1&pageIndex=1"
             }).then(res=>{
                 this.$data.totalCount=res.data.totalCount
                 console.log(res.data.Content)
                 this.tableData=res.data.Content
-                this.tableData.forEach(element => {
-                    element.question=" "
-                });
                 console.log(this.inWorkcell)
             })
     }

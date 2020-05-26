@@ -134,7 +134,7 @@ export default {
          Axios({
         method:'get',
         baseURL:'http://api.zjk-conson.com',
-        url:'Workcell/getWorkcellbyID?'+"uid="+this.formLabelAlign.uid
+        url:'/Workcell/getWorkcellbyID?'+"uid="+this.formLabelAlign.uid
       }).then(res=>{
         this.$data.inWorkcell=res.data
         console.log(this.inWorkcell)
