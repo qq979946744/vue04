@@ -54,7 +54,19 @@
                 <el-button
                 size="mini"
                 type="danger"
-                @click="joinToBrokens(scope.row,scope.row.id,scope.row.Response)" >报废申请</el-button>
+                @click="joinToBrokens(scope.row,scope.row.id,scope.row.Response)" >同意报废申请</el-button>
+            </p>
+            <p>
+                <el-button
+                size="mini"
+                type="danger"
+                @click="ignoreToBrokens(scope.row,scope.row.id,scope.row.Response)" >不同意报废申请</el-button>
+            </p>
+            <p>
+                <el-button
+                size="mini"
+                type="danger"
+                @click="ignoreToBrokens(scope.row,scope.row.id,scope.row.Response)" >不同意报废申请</el-button>
             </p>
         </template>
         </el-table-column>
@@ -83,7 +95,7 @@ export default {
     },
     methods:{
          joinToBrokens(obj,id,response){
-             var sure=confirm("确定报废吗")
+             var sure=confirm("确定报废此夹具吗")
              console.log(obj)
              console.log(this.tableData.indexOf(obj))
              console.log(id)
@@ -91,15 +103,33 @@ export default {
                  Axios({
                     method:'get',
                     baseURL:'http://api.zjk-conson.com',
-                    url:'/Update/ChangeBrokensAgreeI?'+"IDs="+id+"&"+"RecordMan="+this.Man+"&Response="+response
+                    url:'/Update/ChangeBrokensAgreeII?'+"IDs="+id+"&"+"RecordMan="+this.Man+"&Response="+response
              }).then(res=>{
                     if(res.data.success==1){
                         this.tableData.splice(this.tableData.indexOf(obj),1)
-                        alert("成功同意报废")
+                        alert("已经报废")
                     }
                 })  
              }
          },
+         ignoreToBrokens(obj,id,response){
+             var sure=confirm("确定不报废此夹具吗")
+             console.log(obj)
+             console.log(this.tableData.indexOf(obj))
+             console.log(id)
+             if(sure==true){
+                 Axios({
+                    method:'get',
+                    baseURL:'http://api.zjk-conson.com',
+                    url:'/Update/ChangeBrokensDisAgree?'+"IDs="+id+"&"+"RecordMan="+this.Man+"&Response="+response
+             }).then(res=>{
+                    if(res.data.success==1){
+                        this.tableData.splice(this.tableData.indexOf(obj),1)
+                        alert("已经退回报废请求")
+                    }
+                })  
+             }
+         }
          
 
     },
@@ -109,7 +139,7 @@ export default {
          Axios({
                 method:'get',
                 baseURL:'http://api.zjk-conson.com',
-                url:'/query/queryRecordBK?'+"Workcell="+this.workcell+"&state=1&pageIndex=1"
+                url:'/query/queryRecordBK?'+"Workcell="+this.workcell+"&state=4&pageIndex=1"
             }).then(res=>{
                 this.$data.totalCount=res.data.totalCount
                 console.log(res.data.Content)

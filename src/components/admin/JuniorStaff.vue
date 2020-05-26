@@ -3,8 +3,8 @@
     <el-container id="container" style=" border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu router>
-          <el-menu-item index="/"> 出库申请</el-menu-item>
-          <el-menu-item>报库申请</el-menu-item>
+          <el-menu-item @click="out"> 出库申请</el-menu-item>
+          <el-menu-item @click="join">入库申请</el-menu-item>
           <el-menu-item @click="repair">
             报修申请
           </el-menu-item>
@@ -59,6 +59,18 @@ export default {
       repair:function(){
           this.$router.push({
             name:'JoinRepair',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
+      join:function(){
+          this.$router.push({
+            name:'JuniorStaffJoin',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
+      out:function(){
+          this.$router.push({
+            name:'JuniorStaffOut',
             query:{workcell:this.workcell,uid:this.uid}
           })
       }

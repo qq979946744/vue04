@@ -3,7 +3,8 @@
     <el-container id="container" style=" border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu >
-          
+             <el-menu-item @click="out"> 出库申请</el-menu-item>
+             <el-menu-item @click="join">入库申请</el-menu-item>
              <el-menu-item >创建工具夹类别</el-menu-item>
              <el-menu-item >修改工具架类别</el-menu-item>
              <el-menu-item >采购入库申请处理</el-menu-item>
@@ -47,7 +48,7 @@ export default {
       address: "上海市普陀区金沙江路 1518 弄"
     };
     return {
-      tableData: Array(20).fill(item),
+      tableData: Array(10).fill(item),
       uid:"1",
       workcell:"1",
       role:"",
@@ -58,6 +59,18 @@ export default {
       jionBrokenI:function(){
           this.$router.push({
             name:'TwoBroken',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
+      join:function(){
+          this.$router.push({
+            name:'SuperVisorJoin',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
+      out:function(){
+          this.$router.push({
+            name:'SuperVisorOut',
             query:{workcell:this.workcell,uid:this.uid}
           })
       }

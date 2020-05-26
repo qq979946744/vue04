@@ -56,6 +56,12 @@
                 type="danger"
                 @click="joinToBrokens(scope.row,scope.row.id,scope.row.Response)" >报废申请</el-button>
             </p>
+            <p>
+                <el-button
+                size="mini"
+                type="danger"
+                @click="ignoreToBrokens(scope.row,scope.row.id,scope.row.Response)" >不同意报废申请</el-button>
+            </p>
         </template>
         </el-table-column>
     </el-table>
@@ -100,6 +106,24 @@ export default {
                 })  
              }
          },
+         ignoreToBrokens(obj,id,response){
+             var sure=confirm("确定不报废此夹具吗")
+             console.log(obj)
+             console.log(this.tableData.indexOf(obj))
+             console.log(id)
+             if(sure==true){
+                 Axios({
+                    method:'get',
+                    baseURL:'http://api.zjk-conson.com',
+                    url:'/Update/ChangeBrokensDisAgree?'+"IDs="+id+"&"+"RecordMan="+this.Man+"&Response="+response
+             }).then(res=>{
+                    if(res.data.success==1){
+                        this.tableData.splice(this.tableData.indexOf(obj),1)
+                        alert("已经退回报废请求")
+                    }
+                })  
+             }
+         }
          
 
     },

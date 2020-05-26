@@ -52,6 +52,14 @@
               <el-button >{{Workcell.workcellName}}</el-button>
             </el-col>
           </el-row>
+          <el-row type="flex" class="row-bg" justify="left">
+            <p >入/出库录入信息：</p>
+          </el-row>
+          <el-row type="flex" class="row-bg" justify="center">
+            <el-col :span="6" >
+              <el-button >入库/出库</el-button>
+            </el-col>
+          </el-row>
         </el-main>
       </el-container>
     </el-container>
