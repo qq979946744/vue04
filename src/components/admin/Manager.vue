@@ -5,7 +5,7 @@
         <el-menu >
             <el-menu-item @click="out"> 出库申请</el-menu-item>
             <el-menu-item @click="join">入库申请</el-menu-item>
-            <el-menu-item >入库申请处理</el-menu-item>
+            <el-menu-item @click="newJoin">新夹具入库申请处理</el-menu-item>
             <el-menu-item @click="jionBrokenII" >报废申请处理</el-menu-item>
            
             
@@ -61,6 +61,12 @@ export default {
             query:{workcell:this.workcell,uid:this.uid}
           })
       },
+      newJoin:function(){
+          this.$router.push({
+            name:'ThreeNewJoin',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
+      },
       join:function(){
           this.$router.push({
             name:'ManagerJoin',
@@ -91,5 +97,16 @@ export default {
 .cen {
   height: 60px;
   line-height: 60px;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

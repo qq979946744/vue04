@@ -1,12 +1,9 @@
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%" stripe= "true">
+    <el-table @selection-change="handleSelectionChange" :data="tableData" style="width: 100%" stripe= "true">
         <el-table-column
-        label="记录标识号"
+        type="selection"
         min-width="5%">
-        <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.id}}</span>
-        </template>
         </el-table-column>
         <el-table-column
         label="夹具名字"
@@ -62,15 +59,20 @@
                 type="danger"
                 @click="ignoreToBrokens(scope.row,scope.row.id,scope.row.Response)" >不同意报废申请</el-button>
             </p>
-            <p>
-                <el-button
-                size="mini"
-                type="danger"
-                @click="ignoreToBrokens(scope.row,scope.row.id,scope.row.Response)" >不同意报废申请</el-button>
-            </p>
+            
         </template>
         </el-table-column>
     </el-table>
+    <el-row type="flex" class="row-bg" justify="center" style="margin:10px 0;">
+        <el-button type="danger" @click="all">同意报废</el-button>
+        <el-button type="danger" @click="noAll">不同意报废</el-button>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="center" >
+        
+        <el-button  type="primary" plain :disabled="index==1?true:false" @click="getPre">上一页</el-button>
+        <el-button :type="curIndex=index?'success':'primary'" plain v-for="zindex in totalPage" :key="zindex" @click="getWorkcell(zindex)">{{zindex}}</el-button>
+        <el-button type="primary" plain :disabled="index==totalPage?true:false" @click="getNext">下一页</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -85,15 +87,92 @@ export default {
       };
       return {
         tableData: Array(10).fill(item),
+         multipleSelection: [],
         uid:"1",
         workcell:"1",
         index:1,
-        totalCount:"",
-        totalPage:"",
+        totalCount:5,
+        totalPage:1,
+        curIndex:1,
         Man:"Senior"
       }
     },
     methods:{
+        removeArray(arr, val) {
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] == val) {
+                arr.splice(i, 1);
+                break;
+                }
+            }
+        },
+         all(){
+            console.log(this.multipleSelection.length==0)
+            if(this.multipleSelection.length==0){
+                alert('您还未选中需要报修的夹具')
+            }else{
+                this.multipleSelection.forEach(element => {
+                    console.log(this.tableData.indexOf(element))
+                    const indexElement=this.tableData.indexOf(element)
+                    
+                    Axios({
+                        method:'get',
+                        baseURL:'http://api.zjk-conson.com',
+                        url:'/Update/ChangeBrokensAgreeII?'+"IDs="+element.id+"&"+"RecordMan="+this.Man+"&Response="+element.Response
+                     }).then(res=>{
+                        
+                         this.removeArray(this.tableData,element)
+
+                    })  
+                    alert('已经处理')
+                    
+                });
+            }
+            
+        },
+        noAll(){
+            console.log(this.multipleSelection.length==0)
+            if(this.multipleSelection.length==0){
+                alert('您还未选中需要报修的夹具')
+            }else{
+                this.multipleSelection.forEach(element => {
+                    console.log(this.tableData.indexOf(element))
+                    const indexElement=this.tableData.indexOf(element)
+                    Axios({
+                        method:'get',
+                        baseURL:'http://api.zjk-conson.com',
+                        url:'/Update/ChangeBrokensDisAgree?'+"IDs="+element.id+"&"+"RecordMan="+this.Man+"&Response="+element.Response
+                     }).then(res=>{
+                            this.removeArray(this.tableData,element)
+                    })  
+                });
+            }
+            alert('提交成功')
+            
+        },
+        handleSelectionChange(val) {
+         this.multipleSelection = val;
+        },
+        getWorkcell(pageIndex){
+            Axios({
+                method:'get',
+                baseURL:'http://api.zjk-conson.com',
+                url:'/query/queryRecordBK?'+"Workcell="+this.workcell+"&state=4&pageIndex="+pageIndex
+            }).then(res=>{
+                this.tableData=res.data.Content
+            })
+        },
+        getNext(){
+            index++
+            curIndex++
+            getWorkcell(index)
+            
+        },
+        getPre(){
+            index--
+            curIndex--
+            getWorkcell(index)
+        },
          joinToBrokens(obj,id,response){
              var sure=confirm("确定报废此夹具吗")
              console.log(obj)
@@ -142,9 +221,8 @@ export default {
                 url:'/query/queryRecordBK?'+"Workcell="+this.workcell+"&state=4&pageIndex=1"
             }).then(res=>{
                 this.$data.totalCount=res.data.totalCount
-                console.log(res.data.Content)
+                this.$data.totalPage=res.data.totalPage
                 this.tableData=res.data.Content
-                console.log(this.inWorkcell)
             })
     }
 
@@ -153,4 +231,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#First{
+    height: 100%;
+}
+
+.elTable{
+    min-height: 90%;
+}
+
 </style>

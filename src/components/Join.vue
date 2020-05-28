@@ -1,45 +1,191 @@
 <template>
- <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-  <el-form-item label="IDs(需要入库的夹具id,多个id以,分隔)">
-    <el-input v-model="formLabelAlign.IDs"></el-input>
-  </el-form-item>
-  <el-form-item label="产线名称">
-    <el-input v-model="formLabelAlign.LineName"></el-input>
-  </el-form-item>
-  <el-form-item label="活动形式">
-    <el-input v-model="formLabelAlign.type"></el-input>
-  </el-form-item>
-  <el-form-item label="记录人">
-    <el-input v-model="formLabelAlign.RecordMan"></el-input>
-  </el-form-item>
-  <el-form-item label="经手人">
-    <el-input v-model="formLabelAlign.HandMan"></el-input>
-  </el-form-item>
-  <el-form-item label="操作" >
-    <template slot-scope="scope">  
-        <el-button>入库申请</el-button>
-    </template>
-  </el-form-item>
-</el-form>
+  <div id="First">
+    <el-table @selection-change="handleSelectionChange" class="elTable" :data="tableData" style="width: 100%" stripe= "true">
+    <el-table-column
+      type="selection"
+      min-width="5%">
+    </el-table-column>
+    <el-table-column
+      label="夹具编号"
+      min-width="20%">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>产线: {{ scope.row.LineName}}</p>
+          <p>存放位置: {{ scope.row.Location }}</p>
+          <p>状态: {{ scope.row.state}}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">{{ scope.row.CodeSeqId }}</el-tag>
+          </div>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column label="出库经手人"  min-width="10%">
+        <template slot-scope="scope">
+      <span >{{ scope.row.OHandMan}}</span>
+       </template>
+    </el-table-column>
+    <el-table-column label="出库记录人"  min-width="10%">
+        <template slot-scope="scope">
+      <span >{{ scope.row.ORecordMan}}</span>
+       </template>
+    </el-table-column>
+    <el-table-column label="出库日期"  min-width="10%">
+        <template slot-scope="scope">
+      <span >{{ scope.row.OTime}}</span>
+       </template>
+    </el-table-column>
+    <el-table-column label="入库经手人"  min-width="30%">
+      <template slot-scope="scope">
+          <el-input type="textarea" v-model="scope.row.IHandMan"></el-input>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作"  min-width="15%">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          type="danger"
+          @click="join(scope.row,scope.row.id,scope.row.IHandMan)">入库</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-row type="flex" class="row-bg" justify="center" style="margin:10px 0;">
+        <el-button type="danger" @click="all">一起报修</el-button>
+    </el-row>
+   <el-row type="flex" class="row-bg" justify="center" >
+        <el-button  type="primary" plain :disabled="index==1?true:false" @click="getPre">上一页</el-button>
+        <el-button :type="curIndex=index?'success':'primary'" plain v-for="zindex in totalPage" :key="zindex" @click="getWorkcell(zindex)">{{zindex}}</el-button>
+        <el-button type="primary" plain :disabled="index==totalPage?true:false" @click="getNext">下一页</el-button>
+    </el-row>
+  </div>
 </template>
 
 <script>
 import Axios from 'axios'
- export default {
+export default {
     data() {
-      return {
-        labelPosition: 'top',
-        formLabelAlign: {
-          IDs: '',
-          LineName: '',
-          RecordMan: '记录人',
-          HandMan:'经手人'
-        }
+      const item = {
+        ID: '1',
+        BillNo: '王小虎',
+        question:""
       };
+      return {
+        tableData: Array(10).fill(item),
+        multipleSelection: [],
+        uid:"",
+        workcell:7,
+        index:1,
+        totalCount:5,
+        totalPage:5,
+        curIndex:1,
+        RecordMan:"demo"
+      }
+    },
+    methods:{
+        removeArray(arr, val) {
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] == val) {
+                arr.splice(i, 1);
+                break;
+                }
+            }
+        },
+        all(){
+            console.log(this.multipleSelection.length==0)
+            if(this.multipleSelection.length==0){
+                alert('您还未选中需要报修的夹具')
+            }else{
+                this.multipleSelection.forEach(element => {
+                    const indexElement=this.tableData.indexOf(element)
+                    Axios({
+                        method:'get',
+                        baseURL:'http://api.zjk-conson.com',
+                        url:'/Update/ChangeInOutWarehouse?'+"IDs="+element.id+"&RecordMan="+this.RecordMan+"&HandMan="+element.IHandMan
+                     }).then(res=>{
+                            this.removeArray(this.tableData,element)
+                    })  
+                });
+            }
+            alert('提交成功')
+            
+        },
+        handleSelectionChange(val) {
+         this.multipleSelection = val;
+        },
+        TellMeId(num){
+            console.log(num)
+        },
+        getWorkcell:function(pageIndex){
+            Axios({
+                method:'get',
+                baseURL:'http://api.zjk-conson.com',
+                url:'/query/queryRecordLR?'+"Workcell="+this.workcell+"&state=1&pageIndex="+pageIndex
+            }).then(res=>{
+                res.data.Content.forEach(element => {
+                    element.HandMan=""
+                });
+                this.tableData=res.data.Content
+            })
+        },
+        getNext(){
+            index++
+            curIndex++
+            getWorkcell(index)
+            
+        },
+        getPre(){
+            index--
+            curIndex--
+            getWorkcell(index)
+        },
+        change (e) {
+         this.$forceUpdate()
+        },
+         join(obj,id,handMan){
+             var sure=confirm("确定入库吗")
+             console.log(obj)
+             console.log(this.tableData.indexOf(obj))
+             console.log(id)
+             if(sure==true){
+                 Axios({
+                    method:'get',
+                    baseURL:'http://api.zjk-conson.com',
+                    url:'/Update/ChangeInOutWarehouse?'+"IDs="+id+"&RecordMan="+this.RecordMan+"&HandMan="+handMan
+             }).then(res=>{
+                        this.tableData.splice(this.tableData.indexOf(obj),1)
+                        alert("入库记录成功")
+                })  
+             }
+           
+         }
+
+    },
+    created(){
+        // this.uid=this.$route.query.uid
+        // this.workcell=this.$route.query.workcell
+         Axios({
+                method:'get',
+                baseURL:'http://api.zjk-conson.com',
+                url:'/query/queryRecordLR?'+"Workcell="+this.workcell+"&state=1&pageIndex=1"
+            }).then(res=>{
+                this.$data.totalCount=res.data.totalCount
+                this.$data.totalPage=res.data.totalPage
+                res.data.Content.forEach(element => {
+                    element.HandMan=""
+                });
+                this.tableData=res.data.Content
+            })
     }
+
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#First{
+    height: 100%;
+}
+
+.elTable{
+    min-height: 90%;
+}
 </style>

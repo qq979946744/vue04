@@ -3,6 +3,7 @@
     <el-container id="container" style=" border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu router>
+            
           <el-menu-item @click="out"> 出库申请</el-menu-item>
           <el-menu-item @click="join">入库申请</el-menu-item>
           <el-menu-item @click="repair">
@@ -73,7 +74,8 @@ export default {
             name:'JuniorStaffOut',
             query:{workcell:this.workcell,uid:this.uid}
           })
-      }
+      },
+
   },
   created(){
       this.uid=this.$route.query.uid

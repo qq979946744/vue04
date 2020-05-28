@@ -15,9 +15,12 @@ import JoinRepair from '../components/SeniorStaffCom/JoinRepair'
 import JoinBroken from '../components/JuniorStaffCom/JoinBroken'
 import queryRecordRP from '../components/JuniorStaffCom/queryRecordRP'
 import TwoBroken from '../components/SuperVisor/TwoBroken'
+import TwoNewJoin from '../components/SuperVisor/TwoNewJoin'
 import ThreeBroken from '../components/Manager/ThreeBroken'
+import ThreeNewJoin from '../components/Manager/ThreeNewJoin'
 import Out from '../components/Out.vue'
 import Join from '../components/Join.vue'
+import NewJoin from '../components/SeniorStaffCom/NewJoin'
 
 Vue.use(Router)
 
@@ -56,6 +59,7 @@ export default new Router({
                 }
 
 
+
             ]
         },
         {
@@ -67,6 +71,12 @@ export default new Router({
                     name: 'ThreeBroken',
                     component: ThreeBroken
                 },
+                {
+                    path: '/Manager/ThreeNewJoin',
+                    name: 'ThreeNewJoin',
+                    component: ThreeNewJoin
+                },
+
                 {
                     path: '/Manager/Out',
                     name: 'ManagerOut',
@@ -89,6 +99,11 @@ export default new Router({
                     path: '/SuperVisor/TwoBroken',
                     name: 'TwoBroken',
                     component: TwoBroken
+                },
+                {
+                    path: '/SuperVisor/TwoNewJoin',
+                    name: 'TwoNewJoin',
+                    component: TwoNewJoin
                 },
                 {
                     path: '/SuperVisor/Out',
@@ -115,6 +130,11 @@ export default new Router({
                     path: '/SeniorStaff/JoinBroken',
                     name: 'JoinBroken',
                     component: JoinBroken
+                },
+                {
+                    path: '/SeniorStaff/NewJoin',
+                    name: 'SeniorStaffNewJoin',
+                    component: NewJoin
                 },
                 {
                     path: '/SeniorStaff/queryRecordRP',

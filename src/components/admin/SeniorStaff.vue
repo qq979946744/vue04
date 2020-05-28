@@ -5,8 +5,7 @@
         <el-menu router>
              <el-menu-item @click="out"> 出库申请</el-menu-item>
              <el-menu-item @click="join">入库申请</el-menu-item>            
-             <el-menu-item >采购入库申请</el-menu-item>
-             <el-menu-item >修改工具架基础信息</el-menu-item>
+             <el-menu-item @click="newJoin"> 新夹具入库申请</el-menu-item>
              <el-menu-item @click="selectRepair">报修申请处理</el-menu-item>
              <el-menu-item @click="selectBroken">报废申请</el-menu-item>
              
@@ -31,7 +30,9 @@
         </el-header>
 
         <el-main>
-          <router-view></router-view>
+          <transition name="slide-fade">
+            <router-view></router-view>
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -79,6 +80,12 @@ export default {
             name:'SeniorStaffOut',
             query:{workcell:this.workcell,uid:this.uid}
           })
+       },
+        newJoin:function(){
+          this.$router.push({
+            name:'SeniorStaffNewJoin',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
       }
   }
 };
@@ -92,5 +99,16 @@ export default {
 .cen {
   height: 60px;
   line-height: 60px;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

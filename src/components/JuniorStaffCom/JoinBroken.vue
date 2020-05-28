@@ -1,12 +1,9 @@
 <template>
-  <div>
-   <el-table :data="tableData" style="width: 100%" stripe= "true">
+  <div id="First">
+   <el-table @selection-change="handleSelectionChange" class="elTable" :data="tableData" style="width: 100%" stripe= "true">
     <el-table-column
-      label="id"
+        type="selection"
       min-width="5%">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.ID }}</span>
-      </template>
     </el-table-column>
     <el-table-column
       label="夹具编号"
@@ -37,6 +34,14 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-row type="flex" class="row-bg" justify="center" style="margin:10px 0;">
+        <el-button type="danger" @click="all">一起同意维修</el-button>
+    </el-row>
+  <el-row type="flex" class="row-bg" justify="center" >
+        <el-button  type="primary" plain :disabled="index==1?true:false" @click="getPre">上一页</el-button>
+        <el-button :type="curIndex=index?'success':'primary'" plain v-for="zindex in totalPage" :key="zindex" @click="getWorkcell(zindex)">{{zindex}}</el-button>
+        <el-button type="primary" plain :disabled="index==totalPage?true:false" @click="getNext">下一页</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -51,28 +56,71 @@ export default {
       };
       return {
         tableData: Array(10).fill(item),
+        multipleSelection: [],
         uid:"1",
-        workcell:"",
+        workcell:7,
         index:1,
-        totalCount:"",
-        totalPage:"",
+        totalCount:5,
+        totalPage:5,
+        curIndex:1,
         RecordMan:"demo",
 
       }
     },
     methods:{
+        removeArray(arr, val) {
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] == val) {
+                arr.splice(i, 1);
+                break;
+                }
+            }
+        },
+        all(){
+            console.log(this.multipleSelection.length==0)
+            if(this.multipleSelection.length==0){
+                alert('您还未选中需要报修的夹具')
+            }else{
+                this.multipleSelection.forEach(element => {
+                    var indexElement=this.tableData.indexOf(element)
+                    Axios({
+                        method:'get',
+                        baseURL:'http://api.zjk-conson.com',
+                        url:'/Join/JoinBroken?'+"IDs="+element.ID+"&Problem="+element.requestion+"&"+"RecordMan="+this.RecordMan
+                     }).then(res=>{
+                        this.removeArray(this.tableData,element)
+                    })  
+                    
+                });
+            }
+            
+        },
+        handleSelectionChange(val) {
+         this.multipleSelection = val;
+        },
         getWorkcell:function(pageIndex){
+            alert(pageIndex)
             Axios({
                 method:'get',
                 baseURL:'http://api.zjk-conson.com',
-                url:'/query/ queryInstruction?'+"Workcell="+this.workcell+"&EntityState=0&"+"pageIndex="+pageIndex
+                url:'/query/queryInstruction?'+"Workcell="+this.workcell+"&EntityState=0&pageIndex="+pageIndex
             }).then(res=>{
-                this.$data.totalCount=res.data.totalCount
-                
-                console.log(res.data.Content)
+                res.data.Content.forEach(element => {
+                    element.question=""
+                });
                 this.tableData=res.data.Content
-                console.log(this.inWorkcell)
             })
+        },
+         getNext(){
+            index++
+            curIndex++
+            getWorkcell(index)
+            
+        },
+        getPre(){
+            index--
+            curIndex--
+            getWorkcell(index)
         },
         change (e) {
          this.$forceUpdate()
@@ -87,10 +135,9 @@ export default {
                     baseURL:'http://api.zjk-conson.com',
                     url:'/Join/JoinBroken?'+"IDs="+id+"&Problem="+requestion+"&"+"RecordMan="+this.RecordMan
              }).then(res=>{
-                    if(res.data.success==1){
+                        console.log(res.data)
                         this.tableData.splice(this.tableData.indexOf(obj),1)
                         alert("申请报废成功")
-                    }
                 })  
              }
          }
@@ -106,12 +153,12 @@ export default {
                 url:'/query/queryInstruction?'+"Workcell="+this.workcell+"&EntityState=0&pageIndex=1"
             }).then(res=>{
                 this.$data.totalCount=res.data.totalCount
-                console.log(res.data.Content)
-                this.tableData=res.data.Content
-                this.tableData.forEach(element => {
+                this.$data.totalPage=res.data.totalPage
+
+                res.data.Content.forEach(element => {
                     element.question=""
                 });
-                console.log(this.inWorkcell)
+                this.tableData=res.data.Content
             })
     }
 
@@ -120,5 +167,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#First{
+    height: 100%;
+}
 
+.elTable{
+    min-height: 90%;
+}
 </style>
