@@ -1,22 +1,5 @@
 <template>
   <div>
-    <ul id="lis">
-      <li>
-        <router-link to="/Index/Manager">Manager</router-link>
-      </li>
-      <li>
-        <router-link to="/Index/SeniorStaff">SeniorStaff</router-link>
-      </li>
-      <li>
-        <router-link to="/Index/SuperVisor">SuperVisor</router-link>
-      </li>
-      <li>
-        <router-link to="/Index/SystemAdministrator">SystemAdministrator</router-link>
-      </li>
-      <li>
-        <router-link to="/Index/JuniorStaff">JuniorStaff</router-link>
-      </li>
-    </ul>
     <div class="SuperAdministrator">
     <el-container id="container" style=" border: 1px solid #eee">
 
@@ -27,7 +10,6 @@
               <i class="el-icon-setting" style="margin-right: 15px"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>退出</el-dropdown-item>
-                
               </el-dropdown-menu>
             </el-dropdown>
             <span >{{userName}}</span>
@@ -53,11 +35,17 @@
             </el-col>
           </el-row>
           <el-row type="flex" class="row-bg" justify="left">
-            <p >入/出库录入信息：</p>
+            <p >夹具的定位/寿命检测：</p>
           </el-row>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="6" >
-              <el-button >入库/出库</el-button>
+              <el-button @click="postion">夹具的定位</el-button>
+            </el-col>
+            <el-col :span="6" >
+            <el-button @click="life">夹具的寿命检测</el-button>
+            </el-col>
+            <el-col :span="6" >
+            <el-button @click="test">获取参数</el-button>
             </el-col>
           </el-row>
         </el-main>
@@ -85,11 +73,15 @@ export default {
     }
   },
   methods:{
+    test(){
+        console.log(this.$route)
+        alert(this.$route.params)
+    },
     say:function(Workcell,role){
       console.log(Workcell+""+role)
       console.log(this.formLabelAlign.uid)
       switch(role){
-        case 1:
+        case 2:
           this.$router.push({
           name:'JuniorStaff',
           query:{role:role,uid:this.formLabelAlign.uid,workcell:Workcell}
@@ -97,66 +89,80 @@ export default {
           })
           break
 
-        case 2:
+        case 3:
           this.$router.push({
             name:'SeniorStaff',
             query:{role:role,uid:this.formLabelAlign.uid,workcell:Workcell}
           })
           break
-        case 3:
+        case 4:
           this.$router.push({
           name:'SuperVisor',
           query:{role:role,uid:this.formLabelAlign.uid,workcell:Workcell}
           })
           break
-        case 4:
+        case 5:
           this.$router.push({
           name:'Manager',
           query:{role:role,uid:this.formLabelAlign.uid,workcell:Workcell}
           })
           break
-        case 5:
+        case 6:
           this.$router.push({
           name:'SystemAdministrator',
           query:{role:role,uid:this.formLabelAlign.uid,workcell:Workcell}
           })
           break
       }
+    },
+    postion(){
+        this.$router.push({
+          name:'Postion',
+          query:{uid:this.formLabelAlign.uid}
+          })
+    },
+    life(){
+        this.$router.push({
+          name:'Life',
+          query:{uid:this.formLabelAlign.uid}
+          })
     }
       
   },
   created(){
-     if(typeof(this.$route.query.uid)=="undefined"){
+     if(this.$cookies.isKey('uid')){
+         this.formLabelAlign.uid=this.$cookies.get('uid')
+         this.userName=this.$cookies.get('username')
+        //设置cookie-用户名username 30分钟
+        this.$cookies.set("username",this.userName,"30MIN");
+        //设置cookie- uid
+        this.$cookies.set("uid",this.formLabelAlign.uid,"30MIN");
         
 
-         
-         alert("请先登入")
+        //==============
+        Axios({
+            method:'get',
+            baseURL:'http://api.zjk-conson.com',
+            url:'/Workcell/getWorkcellbyID?'+"uid="+this.formLabelAlign.uid
+        }).then(res=>{
+            this.$data.inWorkcell=res.data
+            console.log(this.inWorkcell)
+        })
+        Axios({
+            method:'get',
+            baseURL:'http://api.zjk-conson.com',
+            url:'/Workcell/getAllWorkcell'
+        }).then(res=>{
+            this.$data.allWorkcell=res.data
+            console.log(this.allWorkcell)        
+        })
+
+     }else{
+         alert("请重新登入")
          this.$router.push({
                  name:'Login',
             })
-        // console.log(typeof(this.$route.query.uid))
-        // console.log(typeof(this.$route.query.uid)=="undefined")
-        //  console.log("zzz"+this.$route.query.uid)
-     }else{
-         
-         Axios({
-        method:'get',
-        baseURL:'http://api.zjk-conson.com',
-        url:'/Workcell/getWorkcellbyID?'+"uid="+this.formLabelAlign.uid
-      }).then(res=>{
-        this.$data.inWorkcell=res.data
-        console.log(this.inWorkcell)
-      })
-      Axios({
-        method:'get',
-        baseURL:'http://api.zjk-conson.com',
-        url:'/Workcell/getAllWorkcell'
-      }).then(res=>{
-        this.$data.allWorkcell=res.data
-        console.log(this.allWorkcell)        
-      })
      }
-    
 
   }
   

@@ -18,10 +18,14 @@ import TwoBroken from '../components/SuperVisor/TwoBroken'
 import TwoNewJoin from '../components/SuperVisor/TwoNewJoin'
 import ThreeBroken from '../components/Manager/ThreeBroken'
 import ThreeNewJoin from '../components/Manager/ThreeNewJoin'
+import PM from '../components/JuniorStaffCom/PM'
+import PMTwo from '../components/JuniorStaffCom/PMTwo'
 import Out from '../components/Out.vue'
 import Join from '../components/Join.vue'
 import NewJoin from '../components/SeniorStaffCom/NewJoin'
-
+import Postion from '../components/Postion'
+import Work from '../components/work'
+import Life from '../components/Life'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +40,24 @@ export default new Router({
             path: '/Index',
             name: 'Index',
             component: Index,
+        },
+        {
+
+            path: '/Postion',
+            name: 'Postion',
+            component: Postion,
+        },
+        {
+
+            path: '/Life',
+            name: 'Life',
+            component: Life,
+        },
+        {
+
+            path: '/Work',
+            name: 'Work',
+            component: Work,
         },
         {
 
@@ -87,6 +109,7 @@ export default new Router({
                     name: 'ManagerJoin',
                     component: Join
                 }
+
             ]
 
 
@@ -150,6 +173,16 @@ export default new Router({
                     path: '/SeniorStaff/Join',
                     name: 'SeniorStaffJoin',
                     component: Join
+                },
+                {
+                    path: '/SeniorStaff/PM',
+                    name: 'SeniorStaffPM',
+                    component: PM
+                },
+                {
+                    path: '/SeniorStaff/PMTwo',
+                    name: 'SeniorStaffPMTwo',
+                    component: PMTwo
                 }
             ]
         }

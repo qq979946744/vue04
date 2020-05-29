@@ -6,6 +6,8 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueResource from 'vue-resource'
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 Vue.use(VueResource)
 Vue.use(ElementUI)
 Vue.config.productionTip = false

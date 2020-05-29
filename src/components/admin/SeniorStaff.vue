@@ -5,6 +5,7 @@
         <el-menu router>
              <el-menu-item @click="out"> 出库申请</el-menu-item>
              <el-menu-item @click="join">入库申请</el-menu-item>            
+             <el-menu-item @click="PM">PM定期检查</el-menu-item>
              <el-menu-item @click="newJoin"> 新夹具入库申请</el-menu-item>
              <el-menu-item @click="selectRepair">报修申请处理</el-menu-item>
              <el-menu-item @click="selectBroken">报废申请</el-menu-item>
@@ -20,12 +21,10 @@
             <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>查看</el-dropdown-item>
-                <el-dropdown-item>新增</el-dropdown-item>
-                <el-dropdown-item>删除</el-dropdown-item>
+                <el-dropdown-item>退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span>王小虎</span>
+            <span>{{userName}}</span>
           </div>
         </el-header>
 
@@ -51,8 +50,9 @@ export default {
     return {
       tableData: Array(20).fill(item),
       uid:"1",
-      workcell:"1",
-      role:"2",
+      userName:"",
+      workcell:"",
+      role:"",
       index:1
     };
   },
@@ -86,7 +86,30 @@ export default {
             name:'SeniorStaffNewJoin',
             query:{workcell:this.workcell,uid:this.uid}
           })
+      },
+       PM:function(){
+          this.$router.push({
+            name:'SeniorStaffPM',
+            query:{workcell:this.workcell,uid:this.uid}
+          })
       }
+  },
+  created(){
+       if(this.$cookies.isKey('uid')){
+            this.uid=this.$route.query.uid
+            this.workcell=this.$route.query.workcell
+            this.role=this.$route.query.role
+            this.userName=this.$cookies.get('username')
+             //设置cookie-用户名username 30分钟
+            this.$cookies.set("username",this.$cookies.get('username'),"30MIN");
+            //设置cookie- uid
+            this.$cookies.set("uid",this.$cookies.get("uid"),"30MIN");
+       }else{
+           alert("您未登入，或者登入过期；请重新登入")
+         this.$router.push({
+                 name:'Login',
+            })
+       }
   }
 };
 </script>

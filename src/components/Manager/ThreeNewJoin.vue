@@ -195,9 +195,16 @@ export default {
 
     },
     created(){
-        // this.uid=this.$route.query.uid
-        // this.workcell=this.$route.query.workcell
-         Axios({
+        if(this.$cookies.isKey('uid')){
+            this.uid=this.$route.query.uid
+            this.workcell=this.$route.query.workcell
+            this.RecordMan=this.$cookies.get('username')
+             //设置cookie-用户名username 30分钟
+            this.$cookies.set("username",this.$cookies.get("username"),"30MIN");
+            //设置cookie- uid
+            this.$cookies.set("uid",this.$cookies.get("uid"),"30MIN");
+            //==============
+            Axios({
                 method:'get',
                 baseURL:'http://api.zjk-conson.com',
                 url:'/query/queryInstruction?'+"Workcell="+this.workcell+"&EntityState=5&pageIndex=1"
@@ -206,6 +213,12 @@ export default {
                 this.$data.totalPage=res.data.totalPage
                 this.tableData=res.data.Content
             })
+       }else{
+           alert("您未登入，或者登入过期；请重新登入")
+         this.$router.push({
+                 name:'Login',
+            })
+       }
     }
 
   }

@@ -144,6 +144,21 @@ import Axios from 'axios'
         }
       }
 
+    },
+    created(){
+     if(this.$cookies.isKey('uid')){
+        //设置cookie-用户名username 30分钟
+        this.$cookies.set("username",this.userName,"30MIN");
+        //设置cookie- uid
+        this.$cookies.set("uid",this.formLabelAlign.uid,"30MIN");
+
+     }else{
+        alert("您未登入，或者登入过期；请重新登入")
+         this.$router.push({
+                 name:'Login',
+            })
+     }
+
     }
   }
 </script>

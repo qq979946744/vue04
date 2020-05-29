@@ -22,7 +22,7 @@
                 <el-dropdown-item>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span>王小虎</span>
+            <span>{{userName}}</span>
           </div>
         </el-header>
 
@@ -48,6 +48,7 @@ export default {
     return {
       tableData: Array(10).fill(item),
       uid:"1",
+      userName:"",
       workcell:"1",
       role:"",
       index:1
@@ -80,9 +81,21 @@ export default {
       }
   },
   created(){
-    //   this.uid=this.$route.query.uid
-    //   this.workcell=this.$route.query.workcell
-    //   this.role=this.$route.query.uid
+       if(this.$cookies.isKey('uid')){
+            this.uid=this.$route.query.uid
+            this.workcell=this.$route.query.workcell
+            this.role=this.$route.query.role
+            this.userName=this.$cookies.get('username')
+             //设置cookie-用户名username 30分钟
+            this.$cookies.set("username",this.$cookies.get("username"),"30MIN");
+            //设置cookie- uid
+            this.$cookies.set("uid",this.$cookies.get("uid"),"30MIN");
+       }else{
+           alert("请重新登入")
+         this.$router.push({
+                 name:'Login',
+            })
+       }
   }
 
 };

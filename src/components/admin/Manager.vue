@@ -5,6 +5,7 @@
         <el-menu >
             <el-menu-item @click="out"> 出库申请</el-menu-item>
             <el-menu-item @click="join">入库申请</el-menu-item>
+            
             <el-menu-item @click="newJoin">新夹具入库申请处理</el-menu-item>
             <el-menu-item @click="jionBrokenII" >报废申请处理</el-menu-item>
            
@@ -23,7 +24,7 @@
                 <el-dropdown-item>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span>王小虎</span>
+            <span>{{userName}}</span>
           </div>
         </el-header>
 
@@ -48,6 +49,7 @@ export default {
     };
     return {
       tableData: Array(10).fill(item),
+      userName:"",
       uid:"1",
       workcell:"1",
       role:"",
@@ -81,9 +83,21 @@ export default {
       }
   },
   created(){
-    //   this.uid=this.$route.query.uid
-    //   this.workcell=this.$route.query.workcell
-    //   this.role=this.$route.query.uid
+       if(this.$cookies.isKey('uid')){
+            this.uid=this.$route.query.uid
+            this.workcell=this.$route.query.workcell
+            this.role=this.$route.query.role
+            this.userName=this.$cookies.get('username')
+             //设置cookie-用户名username 30分钟
+            this.$cookies.set("username",this.$cookies.get("username"),"30MIN");
+            //设置cookie- uid
+            this.$cookies.set("uid",this.$cookies.get("uid"),"30MIN");
+       }else{
+           alert("请重新登入")
+         this.$router.push({
+                 name:'Login',
+            })
+       }
   }
 
 };
