@@ -7,19 +7,18 @@
              <el-menu-item @click="join">入库申请</el-menu-item>
              <el-menu-item @click="newJoin">采购入库申请处理</el-menu-item>
              <el-menu-item @click="jionBrokenI">报废申请处理</el-menu-item>
-            
         </el-menu>
       </el-aside>
-
       <el-container>
         <el-header style="background-color: #b3c0d1; text-align: right; font-size: 12px">
+            
           <div class="cen">
+            <el-button style="float:left;margin-top:10px" type="primary" icon="el-icon-s-home" @click="toIndex" circle></el-button>
+            
             <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>查看</el-dropdown-item>
-                <el-dropdown-item>新增</el-dropdown-item>
-                <el-dropdown-item>删除</el-dropdown-item>
+                <el-dropdown-item @click.native="exit">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <span>{{userName}}</span>
@@ -55,6 +54,23 @@ export default {
     };
   },
   methods:{
+      toIndex(){
+        this.$router.push({
+            name:'Index'
+        })
+      },
+       exit(){
+        if(this.$cookies.remove('uid')){
+            if(this.$cookies.remove('username')){
+                alert('退出成功')
+                this.$router.push({
+                name:'Login'
+                })
+            }else{
+                alert('退出失败 ')
+            }
+        }
+    },
       jionBrokenI:function(){
           this.$router.push({
             name:'TwoBroken',

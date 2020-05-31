@@ -26,6 +26,17 @@ import NewJoin from '../components/SeniorStaffCom/NewJoin'
 import Postion from '../components/Postion'
 import Work from '../components/work'
 import Life from '../components/Life'
+
+import storekeeper from '../components/StoreKeeper/storekeeper'
+import findStaff from '../components/SystemAdministrator/findStaff'
+import modifyInfo from '../components/SystemAdministrator/modifyInfo'
+import addMember from '../components/SystemAdministrator/addMember'
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(Router)
 
 export default new Router({
@@ -84,6 +95,7 @@ export default new Router({
 
             ]
         },
+
         {
             path: '/Manager',
             name: 'Manager',
@@ -143,7 +155,23 @@ export default new Router({
         {
             path: '/SystemAdministrator',
             name: 'SystemAdministrator',
-            component: SystemAdministrator
+            component: SystemAdministrator,
+            children: [{
+                    path: '/SystemAdministrator/findStaff',
+                    name: 'findStaff',
+                    component: findStaff
+                },
+                {
+                    path: '/SystemAdministrator/modifyInfo',
+                    name: 'modifyInfo',
+                    component: modifyInfo
+                },
+                {
+                    path: '/SystemAdministrator/addMember',
+                    name: 'addMember',
+                    component: addMember
+                }
+            ]
         },
         {
             path: '/SeniorStaff',

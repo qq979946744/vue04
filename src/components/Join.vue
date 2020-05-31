@@ -11,8 +11,7 @@
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>产线: {{ scope.row.LineName}}</p>
-          <p>存放位置: {{ scope.row.Location }}</p>
-          <p>状态: {{ scope.row.state}}</p>
+          <p>夹具Model: {{ scope.row.Model }}</p>
           <div slot="reference" class="name-wrapper">
             <el-tag size="medium">{{ scope.row.CodeSeqId }}</el-tag>
           </div>

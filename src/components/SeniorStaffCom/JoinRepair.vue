@@ -30,7 +30,7 @@
         <el-button
           size="mini"
           type="danger"
-          @click="JoinRepair(scope.row,scope.row.ID, scope.row.question)">报修</el-button>
+          @click="JoinRepair(scope.row,scope.row.ID, scope.row.requestion)">报修</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -133,6 +133,7 @@ export default {
                     baseURL:'http://api.zjk-conson.com',
                     url:'/Join/JoinRepair?'+"IDs="+id+"&Problem="+requestion+"&"+"RecordMan="+this.RecordMan
              }).then(res=>{
+                        console.log(res)
                         this.tableData.splice(this.tableData.indexOf(obj),1)
                         alert("报修成功")
                 })  

@@ -49,9 +49,9 @@
             <el-radio-button label="0" name="Clean">否</el-radio-button>
             </el-radio-group>
         </el-form-item>
-        <el-row type="flex" align="center">
+        <el-form-item label="检测完成" prop="type">
             <el-button type="danger" @click="done">检查完成</el-button>
-        </el-row>
+        </el-form-item>
     </el-form>
   </div>
 </template>

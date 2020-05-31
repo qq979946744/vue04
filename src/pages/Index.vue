@@ -9,7 +9,7 @@
             <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>退出</el-dropdown-item>
+                <el-dropdown-item @click.native="exit">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <span >{{userName}}</span>
@@ -44,9 +44,7 @@
             <el-col :span="6" >
             <el-button @click="life">夹具的寿命检测</el-button>
             </el-col>
-            <el-col :span="6" >
-            <el-button @click="test">获取参数</el-button>
-            </el-col>
+        
           </el-row>
         </el-main>
       </el-container>
@@ -73,9 +71,17 @@ export default {
     }
   },
   methods:{
-    test(){
-        console.log(this.$route)
-        alert(this.$route.params)
+    exit(){
+        if(this.$cookies.remove('uid')){
+            if(this.$cookies.remove('username')){
+                alert('退出成功')
+                this.$router.push({
+                name:'Login'
+                })
+            }else{
+                alert('退出失败 ')
+            }
+        }
     },
     say:function(Workcell,role){
       console.log(Workcell+""+role)

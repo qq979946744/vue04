@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <h1 style="text-align:center; margin-bottom:30px">捷普夹具管理系统</h1>
     <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
       <el-form-item label="账号">
         <el-input v-model="formLabelAlign.username"></el-input>
@@ -10,7 +11,6 @@
       
       <el-form-item>
         <el-button type="primary" @click="ligonForm()">立即登陆</el-button>
-        <el-button @click="show">重置</el-button>
       </el-form-item>
     </el-form>
   </div>    

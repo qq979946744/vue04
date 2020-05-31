@@ -110,6 +110,8 @@ import Axios from 'axios'
             data:form
           }).then(
             res=>{
+                console.log('类型')
+                console.log(res)
                 alert('上传成功')
             },err =>{
             });
@@ -138,6 +140,8 @@ import Axios from 'axios'
             data:form
           }).then(
             res=>{
+                console.log('实体')
+                console.log(res)
                 alert('上传成功')
             },err =>{
             });
